@@ -4,7 +4,7 @@ Plugin Name: Cyb Blocks
 Plugin URI: https://github.com/Cyb10101/wordpress_cyb-blocks
 Description: Blocks plugin
 Author: Thomas Schur
-Version: 1.0.0
+Version: 1.0.1
 Author URI: https://cyb10101.de/
 */
 
