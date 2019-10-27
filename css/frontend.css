@@ -1,0 +1,44 @@
+body.admin-bar .fancybox-container {
+    z-index: 999999;
+}
+
+[data-fancybox] {
+    outline: none;
+}
+
+.fancybox-share__button .fab {
+    font-size: 19px;
+}
+
+.fancybox-share__button--tumblr {
+    background-color: #36465D;
+}
+.fancybox-share__button--tumblr:hover {
+    background-color: #24364c;
+}
+
+.fancybox-share__button--telegram {
+    background-color: #0088CC;
+}
+.fancybox-share__button--telegram:hover {
+    background-color: #0074b4;
+}
+
+.fancybox-share__button--threema {
+    background-color: #333333;
+}
+.fancybox-share__button--threema:hover {
+    background-color: #000000;
+}
+
+.fancybox-share__button--whatsapp {
+    background-color: #25D366;
+}
+.fancybox-share__button--whatsapp:hover {
+    background-color: #24ba5d;
+}
+
+/* Alert */
+.wp-block-cyb-alert {
+    display: none;
+}
