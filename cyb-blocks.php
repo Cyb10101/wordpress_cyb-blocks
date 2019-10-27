@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Cyb Blocks
-Plugin URI: https://github.com/Cyb10101/wordpress_cyb-blocks/
+Plugin URI: https://github.com/Cyb10101/wordpress_cyb-blocks
 Description: Blocks plugin
 Author: Thomas Schur
 Version: 1.0.0
@@ -49,3 +49,8 @@ class CybBlocks {
 
 $cybBlocks = new CybBlocks();
 $cybBlocks->initialize();
+
+if (is_admin()) {
+    require_once('src/Utility/PluginUpdaterUtility.php');
+    new \Cyb\Utility\PluginUpdaterUtility(__FILE__);
+}
