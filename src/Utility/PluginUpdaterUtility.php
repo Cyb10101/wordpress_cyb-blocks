@@ -185,10 +185,6 @@ if (!class_exists('Cyb\Utility\PluginUpdaterUtility')) {
             $this->retrieveCurrentPluginData();
             $wasActivated = is_plugin_active($this->pluginSlug);
 
-            ob_start();
-            print_r($this->repositoryData);
-            file_put_contents('development.txt', ob_get_clean() . PHP_EOL . PHP_EOL, FILE_APPEND);
-
             // Rename folder
             global $wp_filesystem;
             $pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname($this->pluginSlug);
