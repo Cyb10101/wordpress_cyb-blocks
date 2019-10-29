@@ -247,8 +247,9 @@ registerBlockType('cyb/alert', {
             role: 'alert'
         }, [
             createElement('div', {
-                className: 'message'
-            }, props.attributes.message),
+                className: 'message',
+                dangerouslySetInnerHTML: {__html: props.attributes.message}
+            }),
             !props.attributes.dismissible || createElement('button', {
                 type: 'button',
                 className: 'close',
