@@ -54,6 +54,9 @@ registerBlockType('cyb/anker', {
             blocks: ['core/html'],
             isMatch: function isMatch(attributes) {
                 let htmlContent = document.createElement('div');
+                if (!attributes.hasOwnProperty(content)) {
+                    return true; // Empty content is all right
+                }
                 htmlContent.innerHTML = attributes.content.trim();
 
                 return (
@@ -63,11 +66,15 @@ registerBlockType('cyb/anker', {
                 );
             },
             transform: function (attributes) {
-                console.log('1');
+                let name = '';
                 let htmlContent = document.createElement('div');
-                htmlContent.innerHTML = attributes.content.trim();
+                if (attributes.hasOwnProperty(content)) {
+                    htmlContent.innerHTML = attributes.content.trim();
+                    name = htmlContent.firstChild.getAttribute('name');
+                }
+
                 return createBlock('cyb/anker', {
-                    name: htmlContent.firstChild.getAttribute('name'),
+                    name: name,
                 });
             },
         }],
@@ -240,8 +247,9 @@ registerBlockType('cyb/alert', {
             role: 'alert'
         }, [
             createElement('div', {
-                className: 'message'
-            }, props.attributes.message),
+                className: 'message',
+                dangerouslySetInnerHTML: {__html: props.attributes.message}
+            }),
             !props.attributes.dismissible || createElement('button', {
                 type: 'button',
                 className: 'close',
