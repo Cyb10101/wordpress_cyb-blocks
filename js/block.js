@@ -1,10 +1,10 @@
 // Gutenberg block
 const {registerBlockType, registerBlockStyle, createBlock} = wp.blocks; // Blocks API
 const {createElement} = wp.element; // React.createElement
-const {RichText} = wp.editor;
+const {InspectorControls, RichText} = wp.blockEditor;
 const {__} = wp.i18n; // Translation functions
-const {BaseControl, Button, TextControl, TextareaControl, SelectControl, ToggleControl, PanelBody} = wp.components;
-const {InspectorControls} = wp.editor; //Block inspector wrapper
+const {BaseControl, Button, TextControl, TextareaControl, SelectControl, ToggleControl, RangeControl, PanelBody} = wp.components;
+const {withSelect, withDispatch} = wp.data;
 
 /**
  * Generate a random string
