@@ -54,7 +54,7 @@ registerBlockType('cyb/anker', {
             blocks: ['core/html'],
             isMatch: function isMatch(attributes) {
                 let htmlContent = document.createElement('div');
-                if (!attributes.hasOwnProperty(content)) {
+                if (!attributes.hasOwnProperty('content')) {
                     return true; // Empty content is all right
                 }
                 htmlContent.innerHTML = attributes.content.trim();
@@ -68,7 +68,7 @@ registerBlockType('cyb/anker', {
             transform: function (attributes) {
                 let name = '';
                 let htmlContent = document.createElement('div');
-                if (attributes.hasOwnProperty(content)) {
+                if (attributes.hasOwnProperty('content')) {
                     htmlContent.innerHTML = attributes.content.trim();
                     name = htmlContent.firstChild.getAttribute('name');
                 }
@@ -117,9 +117,9 @@ registerBlockType('cyb/anker', {
         ]);
     },
     save: function (props) {
-        return createElement('a',
-            {name: props.attributes.content},
-        );
+        return createElement('a', {
+            name: props.attributes.name
+        });
     }
 });
 
