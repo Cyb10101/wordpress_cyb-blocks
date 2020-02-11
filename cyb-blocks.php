@@ -4,7 +4,7 @@ Plugin Name: Cyb Blocks
 Plugin URI: https://github.com/Cyb10101/wordpress_cyb-blocks
 Description: Blocks plugin
 Author: Thomas Schur
-Version: 1.0.3
+Version: 1.0.4
 Author URI: https://cyb10101.de/
 */
 
@@ -35,7 +35,7 @@ class CybBlocks {
     public function enqueueScripts() {
         if (!is_admin()) {
             wp_deregister_script('jquery');
-            wp_register_script('jquery', get_template_directory_uri() . '/includes/jquery.min.js', false);
+            wp_register_script('jquery', plugins_url('js/jquery.min.js', __FILE__), false);
             wp_enqueue_script('jquery');
 
             wp_enqueue_style('fancybox', plugins_url('css/jquery.fancybox.min.css', __FILE__), [], false);

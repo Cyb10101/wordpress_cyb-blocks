@@ -115,7 +115,7 @@ if (!class_exists('Cyb\Utility\PluginUpdaterUtility')) {
             if ($updateAvailable) {
                 $obj = new \stdClass();
                 $obj->slug = $this->pluginSlug;
-                $obj->new_version = $this->repositoryData->name;
+                $obj->new_version = $this->repositoryData['version'];
                 $obj->url = $this->pluginData['PluginURI'];
                 $obj->package = $this->buildUrl($this->repositoryData['package']);
 
