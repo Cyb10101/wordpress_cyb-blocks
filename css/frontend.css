@@ -42,3 +42,15 @@ body.admin-bar .fancybox-container {
 .wp-block-cyb-alert {
     display: none;
 }
+
+/* Featured Content */
+.wp-block-cyb-featured-content .card {
+    border: none;
+}
+
+.wp-block-cyb-featured-content .card-linked,
+.wp-block-cyb-featured-content .card-linked:hover {
+    display: block;
+    color: #212529;
+    text-decoration: none;
+}

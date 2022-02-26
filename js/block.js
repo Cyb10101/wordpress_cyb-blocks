@@ -36,6 +36,54 @@ const iconReload = createElement('svg', {width: 15, height: 15,  viewBox: '0 0 5
     createElement('path', {d: 'M440.65 12.57l4 82.77A247.16 247.16 0 0 0 255.83 8C134.73 8 33.91 94.92 12.29 209.82A12 12 0 0 0 24.09 224h49.05a12 12 0 0 0 11.67-9.26 175.91 175.91 0 0 1 317-56.94l-101.46-4.86a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12H500a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12h-47.37a12 12 0 0 0-11.98 12.57zM255.83 432a175.61 175.61 0 0 1-146-77.8l101.8 4.87a12 12 0 0 0 12.57-12v-47.4a12 12 0 0 0-12-12H12a12 12 0 0 0-12 12V500a12 12 0 0 0 12 12h47.35a12 12 0 0 0 12-12.6l-4.15-82.57A247.17 247.17 0 0 0 255.83 504c121.11 0 221.93-86.92 243.55-201.82a12 12 0 0 0-11.8-14.18h-49.05a12 12 0 0 0-11.67 9.26A175.86 175.86 0 0 1 255.83 432z'})
 ]);
 
+const CybEntityRecordsDropdownControl = wp.compose.compose(
+    withSelect(function (select, props) {
+        let postTypeAllowed = ['post', 'page'];
+        let postType = postTypeAllowed[0];
+        if (props.hasOwnProperty('postType') && postTypeAllowed.includes(postType)) {
+            postType = props.postType;
+        }
+        return {
+            posts: select('core').getEntityRecords('postType', postType),
+        }
+    })
+)(function (props) {
+    let options = [];
+
+    if (props.posts) {
+        if (props.hasOwnProperty('options') && props.options.length > 0) {
+            options = props.options;
+        } else {
+            if (props.posts.length > 0) {
+                options.push({value: 0, label: __('-- Select a entry --')});
+            } else {
+                options.push({value: 0, label: __('No entries')});
+            }
+        }
+
+        if (props.posts.length > 0) {
+            props.posts.forEach((post) => {
+                options.push({value: post.id, label: post.title.rendered});
+            });
+        }
+    } else {
+        options.push({value: 0, label: __('Loading...')})
+    }
+
+    return createElement('div', {
+        style: {'display': 'flex'}
+    }, [
+        createElement(SelectControl, {
+            label: props.label || __('Select a entry'),
+            options: options,
+            onChange: props.onChange || function (content) {
+                console.error('Method \'onChange\' not set!');
+            },
+            value: props.value
+        })
+    ]);
+});
+
 registerBlockStyle('core/gallery', {
     name: 'cyb-gallery-fancybox',
     label: 'Fancybox'
@@ -93,27 +141,37 @@ registerBlockType('cyb/anker', {
     },
     edit: function (props) {
         function updateName(name) {
-            props.setAttributes({name})
+            name = name.replace(/[^a-zA-Z0-9-_]/g, '');
+            props.setAttributes({name});
         }
 
         return createElement('div', null, [
             createElement('div', {
                 className: 'preview-x',
+                style: {'display': 'flex'}
             }, [
-                createElement('span', {
-                    className: 'dashicons dashicons-editor-code',
-                    style: {'font-size': '18px', 'vertical-align': 'middle'}
+                createElement('div', {
+                    style: {'flex': '0 0 auto'}
+                }, [
+                    createElement('span', {
+                        className: 'dashicons dashicons-editor-code',
+                        style: {'font-size': '18px', 'vertical-align': 'middle'}
+                    }),
+                    'Anker #'
+                ]),
+                createElement(TextControl, {
+                    tagName: 'div',
+                    placeholder: __('name'),
+                    // help: __('The name without hash and whitespace, preferably lowercase. [a-z A-Z 0-9 -_]'),
+                    value: props.attributes.name,
+                    onChange: updateName,
+                    style: {flex: '1 0 auto', border: '1px solid grey;'}
                 }),
-                'Anker #' + props.attributes.name,
             ]),
-            createElement(TextControl, {
+            createElement('span', {
                 className: 'hide-not-selected',
-                type: 'text',
-                label: __('Anker name'),
-                help: __('The name without hash.'),
-                value: props.attributes.name,
-                onChange: updateName
-            }),
+                style: {color: 'rgb(117, 117, 117)', 'font-size': '13px'}
+            }, __('The name without hash and whitespace, preferably lowercase. [a-z A-Z 0-9 -_]')),
         ]);
     },
     save: function (props) {
@@ -260,6 +318,129 @@ registerBlockType('cyb/alert', {
                     'aria-hidden': 'true',
                 }, '&times;')
             ])
+        ]);
+    },
+});
+
+registerBlockType('cyb/featured-content', {
+    title: 'Featured Content',
+    icon: 'megaphone',
+    category: 'widgets',
+    attributes: {
+        postsAmount: {type: 'int', default: 3},
+        fixedHeight: {type: 'int', default: 0},
+        post1: {type: 'int', default: 0},
+        post2: {type: 'int', default: 0},
+        post3: {type: 'int', default: 0},
+        page1: {type: 'int', default: 0},
+        page2: {type: 'int', default: 0},
+        page3: {type: 'int', default: 0},
+    },
+    edit: function (props) {
+        function updatePostsAmount(postsAmount) {
+            props.setAttributes({postsAmount});
+        }
+        function updateFixedHeight(fixedHeight) {
+            props.setAttributes({fixedHeight});
+        }
+        function updatePost1(post1) {
+            props.setAttributes({post1});
+        }
+        function updatePost2(post2) {
+            props.setAttributes({post2});
+        }
+        function updatePost3(post3) {
+            props.setAttributes({post3});
+        }
+        function updatePage1(page1) {
+            props.setAttributes({page1});
+        }
+        function updatePage2(page2) {
+            props.setAttributes({page2});
+        }
+        function updatePage3(page3) {
+            props.setAttributes({page3});
+        }
+
+        return createElement('div', {
+
+        }, [
+            createElement(InspectorControls, null,
+                createElement(PanelBody, {
+                    title: __('Configuration'),
+                    initialOpen: true
+                }, [
+                    createElement(RangeControl, {
+                        label: 'Posts amount',
+                        min: 0,
+                        max: 10,
+                        value: props.attributes.postsAmount,
+                        onChange: updatePostsAmount
+                    }),
+                    createElement(RangeControl, {
+                        label: 'Fixed height',
+                        min: 0,
+                        max: 999,
+                        value: props.attributes.fixedHeight,
+                        onChange: updateFixedHeight
+                    }),
+                    createElement(CybEntityRecordsDropdownControl, {
+                        value: props.attributes.post1,
+                        label: __('Featured Post 1'),
+                        onChange: updatePost1,
+                        options: [
+                            {value: '0', label: '-- ' + __('Please select an option.') + ' --'},
+                        ]
+                    }),
+                    createElement(CybEntityRecordsDropdownControl, {
+                        value: props.attributes.post2,
+                        label: __('Featured Post 2'),
+                        onChange: updatePost2,
+                        options: [
+                            {value: '0', label: '-- ' + __('Please select an option.') + ' --'},
+                        ]
+                    }),
+                    createElement(CybEntityRecordsDropdownControl, {
+                        value: props.attributes.post3,
+                        label: __('Featured Post 3'),
+                        onChange: updatePost3,
+                        options: [
+                            {value: '0', label: '-- ' + __('Please select an option.') + ' --'},
+                        ]
+                    }),
+                    createElement(CybEntityRecordsDropdownControl, {
+                        postType: 'page',
+                        value: props.attributes.page1,
+                        label: __('Featured Page 1'),
+                        onChange: updatePage1,
+                        options: [
+                            {value: '0', label: '-- ' + __('Please select an option.') + ' --'},
+                        ]
+                    }),
+                    createElement(CybEntityRecordsDropdownControl, {
+                        postType: 'page',
+                        value: props.attributes.page2,
+                        label: __('Featured Page 2'),
+                        onChange: updatePage2,
+                        options: [
+                            {value: '0', label: '-- ' + __('Please select an option.') + ' --'},
+                        ]
+                    }),
+                    createElement(CybEntityRecordsDropdownControl, {
+                        postType: 'page',
+                        value: props.attributes.page3,
+                        label: __('Featured Page 3'),
+                        onChange: updatePage3,
+                        options: [
+                            {value: '0', label: '-- ' + __('Please select an option.') + ' --'},
+                        ]
+                    }),
+                ])
+            ),
+            createElement(wp.serverSideRender, {
+                block: 'cyb/featured-content',
+                attributes: props.attributes
+            })
         ]);
     },
 });
