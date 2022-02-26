@@ -155,7 +155,7 @@ registerBlockType('cyb/anker', {
                 }, [
                     createElement('span', {
                         className: 'dashicons dashicons-editor-code',
-                        style: {'font-size': '18px', 'vertical-align': 'middle'}
+                        style: {'font-family': 'dashicons', 'font-size': '18px', 'vertical-align': 'middle'}
                     }),
                     'Anker #'
                 ]),
